@@ -1,9 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import Stars from './Stars'
 
+function handleWhatsApp(nombre) {
+  alert(`⚠️ Función no habilitada en el MVP\n\nEn la versión final, este botón abriría WhatsApp para contactar a ${nombre} directamente.`)
+}
+
 export default function ServiceCard({ servicio }) {
   const navigate = useNavigate()
-  const waUrl = `https://wa.me/57${servicio.telefono}?text=${encodeURIComponent('Hola ' + servicio.nombre + ', te contacto desde ComuniApp.')}`
   return (
     <div className="service-card fade-in" onClick={() => navigate('/perfil/' + servicio.id)}>
       <div className="avatar avatar-md" style={{ background: servicio.color }}>{servicio.initials}</div>
@@ -17,9 +20,12 @@ export default function ServiceCard({ servicio }) {
         </div>
       </div>
       <div className="service-card-actions" onClick={e => e.stopPropagation()}>
-        <a className="btn btn-whatsapp btn-sm" href={waUrl} target="_blank" rel="noopener noreferrer">
+        <button
+          className="btn btn-whatsapp btn-sm"
+          onClick={() => handleWhatsApp(servicio.nombre)}
+        >
           💬 WhatsApp
-        </a>
+        </button>
         <button className="btn btn-outline btn-sm" onClick={() => navigate('/perfil/' + servicio.id)}>
           Ver perfil
         </button>
