@@ -28,15 +28,6 @@ npm test
 npm run build
 ```
 
-## Despliegue en Vercel
-
-1. Sube esta carpeta a un repositorio GitHub
-2. Importa el repositorio en vercel.com
-3. Framework preset: **Vite**
-4. Build command: `npm run build`
-5. Output directory: `dist`
-6. Haz clic en Deploy
-
 ## Funcionalidades del MVP
 
 - Búsqueda y filtrado de servicios por texto y categoría
