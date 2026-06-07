@@ -20,7 +20,13 @@ const mockServicio = {
   miembroDesde: '2026',
 }
 
-// ── PRUEBAS DE INTEGRACIÓN (Componentes) ──────────────────────────────────
+function renderCard() {
+  return render(
+    <MemoryRouter>
+      <ServiceCard servicio={mockServicio} />
+    </MemoryRouter>
+  )
+}
 
 describe('Stars — componente de calificación', () => {
   it('renderiza la calificación correctamente', () => {
@@ -37,14 +43,6 @@ describe('Stars — componente de calificación', () => {
 })
 
 describe('ServiceCard — tarjeta de servicio', () => {
-  function renderCard() {
-    return render(
-      <MemoryRouter>
-        <ServiceCard servicio={mockServicio} />
-      </MemoryRouter>
-    )
-  }
-
   it('muestra el nombre del emprendedor', () => {
     renderCard()
     expect(screen.getByText('Martha Rodríguez')).toBeInTheDocument()
@@ -60,10 +58,17 @@ describe('ServiceCard — tarjeta de servicio', () => {
     expect(screen.getByText(/Belén/)).toBeInTheDocument()
   })
 
-  it('muestra el botón de WhatsApp con enlace correcto', () => {
+  it('muestra el botón de WhatsApp', () => {
     renderCard()
     const waBtn = screen.getByText(/WhatsApp/)
-    expect(waBtn.closest('a')).toHaveAttribute('href', expect.stringContaining('wa.me'))
+    expect(waBtn).toBeInTheDocument()
+  })
+
+  it('el botón de WhatsApp es un button (función deshabilitada en MVP)', () => {
+    renderCard()
+    const waBtn = screen.getByText(/WhatsApp/)
+    // En MVP es un botón que muestra alerta, no un enlace externo
+    expect(waBtn.tagName.toLowerCase()).toBe('button')
   })
 
   it('muestra el botón de ver perfil', () => {

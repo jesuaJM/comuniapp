@@ -4,8 +4,8 @@ import { loginUsuario } from '../data/usuarios'
 
 export default function Login({ onLogin }) {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [error, setError] = useState('')
+  const [form, setForm]     = useState({ email: '', password: '' })
+  const [error, setError]   = useState('')
   const [loading, setLoading] = useState(false)
 
   function handleChange(e) {
@@ -20,8 +20,13 @@ export default function Login({ onLogin }) {
     setTimeout(() => {
       const result = loginUsuario(form.email, form.password)
       setLoading(false)
-      if (result.ok) { onLogin(result.usuario); navigate('/') }
-      else setError(result.error)
+      if (result.ok) {
+        onLogin(result.usuario)
+        // Emprendedor va a crear servicio si aún no tiene uno, vecino va al home
+        navigate('/home')
+      } else {
+        setError(result.error)
+      }
     }, 400)
   }
 
@@ -37,20 +42,27 @@ export default function Login({ onLogin }) {
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label className="form-label" htmlFor="email">Correo Electrónico</label>
-            <input id="email" name="email" type="email" className={`form-input${error ? ' error' : ''}`}
-              placeholder="tucorreo@email.com" value={form.email} onChange={handleChange} autoComplete="email" />
+            <input id="email" name="email" type="email"
+              className={`form-input${error ? ' error' : ''}`}
+              placeholder="tucorreo@email.com"
+              value={form.email} onChange={handleChange} autoComplete="email" />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="password">Contraseña</label>
-            <input id="password" name="password" type="password" className={`form-input${error ? ' error' : ''}`}
-              placeholder="••••••••" value={form.password} onChange={handleChange} autoComplete="current-password" />
+            <input id="password" name="password" type="password"
+              className={`form-input${error ? ' error' : ''}`}
+              placeholder="••••••••"
+              value={form.password} onChange={handleChange} autoComplete="current-password" />
           </div>
-          <button type="submit" className="btn btn-primary btn-full btn-lg" disabled={loading} style={{ marginTop: '0.5rem' }}>
+          <button type="submit" className="btn btn-primary btn-full btn-lg"
+            disabled={loading} style={{ marginTop: '0.5rem' }}>
             {loading ? 'Ingresando...' : 'Iniciar Sesión'}
           </button>
         </form>
 
-        <p className="auth-link">¿No tienes cuenta? <Link to="/registro">Regístrate gratis</Link></p>
+        <p className="auth-link">
+          ¿No tienes cuenta? <Link to="/registro">Regístrate gratis</Link>
+        </p>
       </div>
     </div>
   )

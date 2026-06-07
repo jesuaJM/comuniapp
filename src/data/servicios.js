@@ -136,3 +136,19 @@ export function ordenarServicios(servicios, criterio) {
     default: return copia
   }
 }
+
+// Permite agregar servicios creados por emprendedores en runtime
+let serviciosExtra = []
+
+export function agregarServicio(datos) {
+  const nuevo = {
+    id: Date.now(),
+    ...datos,
+  }
+  serviciosExtra.push(nuevo)
+  return nuevo
+}
+
+export function getTodosLosServicios() {
+  return [...SERVICIOS_INICIALES, ...serviciosExtra]
+}

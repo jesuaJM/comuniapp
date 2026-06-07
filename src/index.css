@@ -380,3 +380,10 @@ body {
 .fade-in { animation: fadeIn 0.3s ease forwards; }
 .fade-in-delay-1 { animation: fadeIn 0.3s ease 0.08s forwards; opacity: 0; }
 .fade-in-delay-2 { animation: fadeIn 0.3s ease 0.16s forwards; opacity: 0; }
+
+/* ── Textarea ── */
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: var(--font);
+}
