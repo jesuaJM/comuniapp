@@ -108,24 +108,56 @@ export const SERVICIOS_INICIALES = [
   },
 ]
 
+// Quita tildes: "Plomería" → "Plomeria", "Eléctrico" → "Electrico"
+function normalizar(str) {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+}
+
+// Verifica si una palabra de búsqueda coincide con un texto
+// Maneja tildes y raíces: "plomero" encuentra "Plomería", "electrico" encuentra "Eléctrico"
+function palabraCoincide(palabra, texto) {
+  const p = normalizar(palabra)
+  const t = normalizar(texto)
+
+  // Coincidencia directa (subcadena)
+  if (t.includes(p)) return true
+
+  // Coincidencia por raíz: quita la última letra y busca si alguna palabra del texto empieza con esa raíz
+  // "plomero" → raíz "plomer" → "plomeria".startsWith("plomer") ✓
+  // "carpintero" → raíz "carpinter" → "carpinteria".startsWith("carpinter") ✓
+  if (p.length >= 4) {
+    const raiz = p.slice(0, -1)
+    return t.split(/\s+/).some(pt => pt.length >= 3 && pt.startsWith(raiz))
+  }
+
+  return false
+}
+
 export function filtrarServicios(servicios, query, categoria) {
   let resultado = [...servicios]
+
   if (query && query.trim() !== '') {
-    const q = query.toLowerCase().trim()
-    resultado = resultado.filter(
-      (s) =>
-        s.nombre.toLowerCase().includes(q) ||
-        s.servicio.toLowerCase().includes(q) ||
-        s.categoria.toLowerCase().includes(q) ||
-        s.barrio.toLowerCase().includes(q) ||
-        s.descripcion.toLowerCase().includes(q)
-    )
+    // Divide la búsqueda en palabras individuales
+    const palabras = query.trim().split(/\s+/).filter(p => p.length >= 2)
+
+    resultado = resultado.filter(s => {
+      // Texto completo del servicio para buscar
+      const texto = `${s.nombre} ${s.servicio} ${s.categoria} ${s.barrio} ${s.descripcion}`
+      // Todas las palabras deben coincidir (AND)
+      return palabras.every(palabra => palabraCoincide(palabra, texto))
+    })
   }
+
   if (categoria && categoria !== 'Todas') {
     resultado = resultado.filter((s) => s.categoria === categoria)
   }
+
   return resultado
 }
+
 
 export function ordenarServicios(servicios, criterio) {
   const copia = [...servicios]
